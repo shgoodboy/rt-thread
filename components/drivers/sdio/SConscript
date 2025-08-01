@@ -18,6 +18,11 @@ if GetDepend('RT_USING_SDHCI'):
     src += [os.path.join('sdhci', 'fit-mmc.c')]
     src += [os.path.join('sdhci', 'sdhci-platform.c')]
 
+# Add ESP32 SDIO AT driver
+if GetDepend('RT_USING_ESP32_SDIO_AT'):
+    src += ['drv_esp32_sdio_at.c']
+    src += ['drv_esp32_sdio_probe.c']
+
 group = DefineGroup('DeviceDrivers', src, depend = ['RT_USING_SDIO'], CPPPATH = path)
 
 Return('group')
