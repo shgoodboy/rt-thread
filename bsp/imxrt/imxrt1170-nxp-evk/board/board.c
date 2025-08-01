@@ -1260,6 +1260,17 @@ void rt_hw_us_delay(rt_uint32_t us)
 {
 }
 
+#ifdef BSP_USING_DMA
+void imxrt_dma_init(void)
+{
+    edma_config_t config;
+
+    DMAMUX_Init(DMAMUX0);
+    EDMA_GetDefaultConfig(&config);
+    EDMA_Init(DMA0, &config);
+}
+#endif
+
 void rt_hw_board_init()
 {
     BOARD_ConfigMPU();
@@ -1275,6 +1286,10 @@ void rt_hw_board_init()
 
 #ifdef BSP_USING_SDRAM
    imxrt_sdram_pins_init();
+#endif
+
+#ifdef BSP_USING_DMA
+    imxrt_dma_init();
 #endif
 
 #ifdef RT_USING_HEAP
