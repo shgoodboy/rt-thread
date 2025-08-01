@@ -1,0 +1,161 @@
+menu "Hardware Drivers Config"
+
+config BSP_USING_QSPIFLASH
+    bool
+    default n
+
+config SOC_MIMXRT1171DVMAA
+    bool
+    select SOC_IMXRT1170_SERIES
+    select BSP_USING_QSPIFLASH
+    select RT_USING_COMPONENTS_INIT
+    select RT_USING_USER_MAIN
+    default y
+
+menu "On-chip Peripheral Drivers"
+
+    config BSP_USING_DMA
+        bool "Enable DMA"
+        default n
+
+    config BSP_USING_GPIO
+        bool "Enable GPIO"
+        select RT_USING_PIN
+        default y
+
+    menuconfig BSP_USING_LPUART
+        bool "Enable UART"
+        select RT_USING_SERIAL
+        default y
+
+        if BSP_USING_LPUART
+            config BSP_USING_LPUART1
+                bool "Enable LPUART1"
+                default y
+
+                config BSP_LPUART1_RX_USING_DMA
+                    bool "Enable LPUART1 RX DMA"
+                    depends on BSP_USING_LPUART1
+                    select BSP_USING_DMA
+                    select RT_SERIAL_USING_DMA
+                    default n
+
+                    config BSP_LPUART1_RX_DMA_CHANNEL
+                        depends on BSP_LPUART1_RX_USING_DMA
+                        int "Set LPUART1 RX DMA channel (0-32)"
+                        default 0
+
+                config BSP_LPUART1_TX_USING_DMA
+                    bool "Enable LPUART1 TX DMA"
+                    depends on BSP_USING_LPUART1
+                    select BSP_USING_DMA
+                    select RT_SERIAL_USING_DMA
+                    default n
+
+                    config BSP_LPUART1_TX_DMA_CHANNEL
+                        depends on BSP_LPUART1_TX_USING_DMA
+                        int "Set LPUART1 TX DMA channel (0-32)"
+                        default 1
+        endif
+
+    menuconfig BSP_USING_SDIO
+        bool "Enable SDIO"
+        select RT_USING_SDIO
+        select RT_USING_DFS
+        default y
+        
+        if BSP_USING_SDIO
+            config BSP_USING_SDIO1
+                bool "Enable SDIO1 for ESP32"
+                default y
+                select RT_USING_WIFI
+                
+            config BSP_USING_SDIO2
+                bool "Enable SDIO2"
+                default n
+        endif
+
+    config BSP_USING_ESP32_SDIO
+        bool "Enable ESP32 over SDIO"
+        depends on BSP_USING_SDIO1
+        select AT_DEVICE_USING_ESP32
+        select AT_DEVICE_ESP32_INIT_ASYN
+        select AT_DEVICE_ESP32_SOCKET
+        default y
+        help
+          Enable ESP32 WiFi module communication over SDIO interface
+
+endmenu
+
+menu "Onboard Peripheral Drivers"
+
+    config BSP_USING_SDRAM
+        bool "Enable SDRAM"
+        default n
+
+    menuconfig BSP_USING_ETH
+    bool "Enable Ethernet"
+    select RT_USING_NETDEV
+    select RT_USING_LWIP
+    default n
+
+
+    if BSP_USING_ETH
+        config BSP_USING_PHY
+            select RT_USING_PHY
+            bool "Enable ethernet phy"
+            default y
+
+        if BSP_USING_PHY
+            config PHY_USING_KSZ8081
+                bool "i.MX RT1176EVK uses ksz8081 phy"
+                default y
+
+            if PHY_USING_KSZ8081
+                config PHY_KSZ8081_ADDRESS
+                int "Specify address of phy device"
+                default 2
+
+                config PHY_RESET_KSZ8081_PORT
+                    int "indicate port of reset"
+                    default 6
+
+                config PHY_RESET_KSZ8081_PIN
+                    int "indicate pin of reset"
+                    default 12
+
+                config FSL_FEATURE_PHYKSZ8081_USE_RMII50M_MODE
+                    bool "Enable the PHY ksz8081 RMII50M mode"
+                    depends on PHY_USING_KSZ8081
+                    default y
+            endif
+        endif
+
+        if BSP_USING_PHY
+                config PHY_USING_RTL8211F
+                    bool "i.MX RT1176EVK uses rtl8211f phy"
+                    default y
+
+                if PHY_USING_RTL8211F
+                    config PHY_RTL8211F_ADDRESS
+                    int "Specify address of phy device"
+                    default 1
+
+                    config PHY_RESET_RTL8211F_PORT
+                        int "indicate port of reset"
+                        default 5
+
+                    config PHY_RESET_RTL8211F_PIN
+                        int "indicate pin of reset"
+                        default 14
+
+                endif
+        endif
+    endif
+endmenu
+
+menu "Board extended module Drivers"
+
+endmenu
+
+endmenu
