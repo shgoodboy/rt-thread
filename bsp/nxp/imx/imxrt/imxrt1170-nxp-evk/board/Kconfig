@@ -61,6 +61,57 @@ menu "On-chip Peripheral Drivers"
                     "SD CARD work as boot devive"
         endif
 
+    config BSP_USING_ESP32_SDIO_AT
+        bool "Enable ESP32 SDIO AT Command Driver"
+        depends on BSP_USING_SDIO
+        default n
+        help
+            Enable ESP32 SDIO AT command driver for WiFi communication via USDHC2.
+
+        if BSP_USING_ESP32_SDIO_AT
+            config ESP32_SDIO_AT_BLOCK_SIZE
+                int "ESP32 SDIO block size"
+                default 512
+                help
+                    SDIO block size for ESP32 communication.
+
+            config ESP32_SDIO_AT_MAX_RESPONSE
+                int "ESP32 SDIO maximum response size"
+                default 2048
+                help
+                    Maximum response buffer size for ESP32 AT commands.
+
+            config ESP32_SDIO_AT_CMD_TIMEOUT
+                int "ESP32 SDIO command timeout (ms)"
+                default 5000
+                help
+                    Timeout for ESP32 AT command execution in milliseconds.
+
+            config ESP32_SDIO_AT_THREAD_STACK
+                int "ESP32 SDIO AT thread stack size"
+                default 2048
+                help
+                    Stack size for ESP32 SDIO AT response handling thread.
+
+            config ESP32_SDIO_AT_THREAD_PRIORITY
+                int "ESP32 SDIO AT thread priority"
+                default 20
+                help
+                    Priority for ESP32 SDIO AT response handling thread.
+
+            config ESP32_SDIO_AT_DEBUG
+                bool "Enable ESP32 SDIO AT debug output"
+                default n
+                help
+                    Enable debug output for ESP32 SDIO AT driver.
+
+            config ESP32_SDIO_AT_EXAMPLE
+                bool "Enable ESP32 SDIO AT example application"
+                default y
+                help
+                    Enable ESP32 SDIO AT example application with MSH commands.
+        endif
+
     menuconfig BSP_USING_LPUART
         bool "Enable UART"
         select RT_USING_SERIAL
