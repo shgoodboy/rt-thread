@@ -2,22 +2,21 @@ Import('RTT_ROOT')
 from building import *
 
 cwd = GetCurrentDir()
-src = Split("""
-dev_block.c
-dev_mmcsd_core.c
-dev_sd.c
-dev_sdio.c
-dev_mmc.c
-""")
+src = []
+CPPPATH = [cwd + '/include']
 
-# The set of source files associated with this SConscript file.
-path = [cwd + '/../include' , cwd + '/sdhci/include']
+if GetDepend('RT_USING_SDIO'):
+    if GetDepend('RT_USING_DFS'):
+        src += ['dev_block.c']
+    src += ['dev_mmcsd_core.c', 'dev_sd.c', 'dev_sdio.c', 'dev_mmc.c']
 
-if GetDepend('RT_USING_SDHCI'):
-    src += [os.path.join('sdhci', 'sdhci.c')]
-    src += [os.path.join('sdhci', 'fit-mmc.c')]
-    src += [os.path.join('sdhci', 'sdhci-platform.c')]
+    if GetDepend('RT_USING_SDHCI'):
+        src += Glob('sdhci/*.c')
 
-group = DefineGroup('DeviceDrivers', src, depend = ['RT_USING_SDIO'], CPPPATH = path)
+    # ESP32 SDIO AT Driver
+    if GetDepend('RT_USING_ESP32_SDIO_AT'):
+        src += ['drv_esp32_sdio_at.c', 'esp32_at_api.c']
+
+group = DefineGroup('DeviceDrivers', src, depend = ['RT_USING_SDIO'], CPPPATH = CPPPATH)
 
 Return('group')
