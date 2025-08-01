@@ -65,6 +65,9 @@ if GetDepend('BSP_USING_AUDIO'):
 if GetDepend('BSP_USING_SDIO'):
     src += ['drv_sdio.c']
 
+if GetDepend('BSP_USING_ESP32_SDIO_AT'):
+    src += ['drv_esp32_sdio_at_imxrt.c']
+
 if GetDepend('BSP_USING_USB_DEVICE'):
     src += ['drv_usbd.c']
     src += Glob('usb/device/*.c')
