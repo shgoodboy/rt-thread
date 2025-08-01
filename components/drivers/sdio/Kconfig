@@ -1,32 +1,62 @@
 config RT_USING_SDIO
-    bool "Using SD/MMC device drivers"
-    select RT_USING_BLK
+    bool "Using SDIO device drivers"
+    depends on RT_USING_DFS
     default n
 
-    if RT_USING_SDIO
-        config RT_SDIO_STACK_SIZE
-            int "The stack size for sdio irq thread"
+if RT_USING_SDIO
+    config RT_SDIO_STACK_SIZE
+        int "The stack size for sdio irq thread"
+        default 512
+
+    config RT_SDIO_THREAD_PRIORITY
+        int "The priority level value of sdio irq thread"
+        default 15
+
+    config RT_SDIO_DEBUG
+        bool "Enable SDIO debug log output"
+        default n
+
+    config RT_USING_ESP32_SDIO_AT
+        bool "Enable ESP32 SDIO AT command driver"
+        default n
+        help
+            Enable ESP32 SDIO AT command driver for WiFi communication
+            
+    if RT_USING_ESP32_SDIO_AT
+        config RT_ESP32_SDIO_AT_BUFFER_SIZE
+            int "ESP32 SDIO AT buffer size"
             default 512
-
-        config RT_SDIO_THREAD_PRIORITY
-            int "The priority level value of sdio irq thread"
-            default 15
-
-        config RT_MMCSD_STACK_SIZE
-            int "The stack size for mmcsd thread"
-            default 1024
-
-        config RT_MMCSD_THREAD_PRIORITY
-            int "The priority level value of mmcsd thread"
-            default 22
-
-        config RT_MMCSD_MAX_PARTITION
-            int "mmcsd max partition"
-            default 16
-        config RT_SDIO_DEBUG
-            bool "Enable SDIO debug log output"
+            help
+                Buffer size for ESP32 SDIO AT command communication
+                
+        config RT_ESP32_SDIO_AT_CMD_TIMEOUT
+            int "ESP32 SDIO AT command timeout (ms)"
+            default 5000
+            help
+                Default timeout for ESP32 AT commands in milliseconds
+                
+        config RT_ESP32_SDIO_AT_RESP_TIMEOUT
+            int "ESP32 SDIO AT response timeout (ms)"
+            default 10000
+            help
+                Default timeout for ESP32 AT responses in milliseconds
+                
+        config RT_ESP32_SDIO_AT_MAX_RETRY
+            int "ESP32 SDIO AT maximum retry count"
+            default 3
+            help
+                Maximum retry count for failed ESP32 AT commands
+                
+        config RT_ESP32_SDIO_AT_DEBUG
+            bool "Enable ESP32 SDIO AT debug output"
             default n
-        config RT_USING_SDHCI
-            bool "Using sdhci for sd/mmc drivers"
+            help
+                Enable debug output for ESP32 SDIO AT driver
+                
+        config RT_ESP32_SDIO_AT_EXAMPLE
+            bool "Enable ESP32 SDIO AT example"
             default n
-        endif
+            help
+                Enable ESP32 SDIO AT example application
+    endif
+endif
