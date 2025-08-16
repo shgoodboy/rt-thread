@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>MIMXRT1171CVM8A</Device>
           <Vendor>NXP</Vendor>
-          <PackID>NXP.MIMXRT1171_DFP.19.0.0</PackID>
+          <PackID>NXP.MIMXRT1171_DFP.25.06.00</PackID>
           <PackURL>https://mcuxpresso.nxp.com/cmsis_pack/repo/</PackURL>
           <Cpu>IRAM(0x20000000,0x020000) IRAM2(0x20000000,0x040000) IROM(0x00200000,0x040000) XRAM(0x1ffe0000,0x020000) XRAM2(0x00000000,0x040000) XRAM3(0x20240000,0x080000) CPUTYPE("Cortex-M7") FPU3(DFPU) CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -186,6 +186,7 @@
             <RvdsVP>3</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -336,7 +337,7 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls>-xc -std=gnu99 -mimplicit-float </MiscControls>
+              <MiscControls>-xc -std=gnu99 -mimplicit-float</MiscControls>
               <Define>RELOC_VECTOR</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
@@ -352,7 +353,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>1</uClangAs>
+            <ClangAsOpt>2</ClangAsOpt>
             <VariousControls>
               <MiscControls>-masm=auto</MiscControls>
               <Define></Define>

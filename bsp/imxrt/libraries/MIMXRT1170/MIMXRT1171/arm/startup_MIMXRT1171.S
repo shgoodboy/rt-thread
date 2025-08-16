@@ -341,6 +341,16 @@ Fill_Ocram:
     str     r1, [r0]
     ldr     r2, [r1]
     msr     msp, r2
+    //OCRAM = 0KB, DTCM = 256KB ,ITCM = 256KB,
+    ldr     R0,=0x400E4040          //gpr16  使能FLEXRAM_BANK_CFG
+    ldr     R1,=0x0000AA07
+    str     R1,[R0]
+    ldr     R0,=0x400E4044          //gpr17  0：15 有效 11 11 10 10 10 10 10 10
+    ldr     R1,= 0x0000FFAA 
+    str     R1,[R0]  
+    ldr     R0,=0x400E4048          //gpr18  0：15 有效
+    ldr     R1,= 0x0000FFAA 
+    str     R1,[R0] 
     ldr     r0,=SystemInit
     blx     r0
     cpsie   i               /* Unmask interrupts */

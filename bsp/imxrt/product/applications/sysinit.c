@@ -144,7 +144,7 @@ int eps32_init(void)
     rt_thread_mdelay(100);
     rt_pin_write(ESP32_RF_PIN, PIN_LOW);
     
-    device_esp32.device_name = ESP32_DEVICE_NAME;
+    /*device_esp32.device_name = ESP32_DEVICE_NAME;
     device_esp32.client_name = ESP32_CLIENT_NAME;
     device_esp32.wifi_ssid = "DTLAB";
     device_esp32.wifi_password = "@12345678@";
@@ -154,10 +154,13 @@ int eps32_init(void)
     if(rc != RT_EOK)
     {
         LOG_E("ESP32 at device register error.");        
-    } 
+    }*/ 
+    rt_kprintf("eps32_init\n");
     return rc;
 }
-INIT_APP_EXPORT(eps32_init);
+INIT_DEVICE_EXPORT(eps32_init);
+
+
 #endif // USING_ESP32
 
 

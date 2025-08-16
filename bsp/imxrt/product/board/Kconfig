@@ -56,7 +56,35 @@ menu "On-chip Peripheral Drivers"
                         depends on BSP_LPUART1_TX_USING_DMA
                         int "Set LPUART1 TX DMA channel (0-32)"
                         default 1
+						
+			config BSP_USING_LPUART2
+				bool "Enable LPUART2"
+				default n
 
+				config BSP_LPUART2_RX_USING_DMA
+					bool "Enable LPUART2 RX DMA"
+					depends on BSP_USING_LPUART2
+					select BSP_USING_DMA
+					select RT_SERIAL_USING_DMA
+					default n
+
+					config BSP_LPUART2_RX_DMA_CHANNEL
+						depends on BSP_LPUART2_RX_USING_DMA
+						int "Set LPUART2 RX DMA channel (0-32)"
+						default 2
+
+				config BSP_LPUART2_TX_USING_DMA
+					bool "Enable LPUART2 TX DMA"
+					depends on BSP_USING_LPUART2
+					select BSP_USING_DMA
+					select RT_SERIAL_USING_DMA
+					default n
+
+					config BSP_LPUART2_TX_DMA_CHANNEL
+						depends on BSP_LPUART2_TX_USING_DMA
+						int "Set LPUART2 TX DMA channel (0-32)"
+						default 3
+						
             config BSP_USING_LPUART3
                 bool "Enable LPUART3"
                 default n
@@ -166,6 +194,95 @@ menu "On-chip Peripheral Drivers"
 			config BSP_USING_BLOCKING_SPI
 				bool "Enable BLOCKING SPI"
 				default y
+		endif
+	menuconfig BSP_USING_SDIO
+		bool "Enable SDIO"	
+		default n
+		
+		if BSP_USING_SDIO
+			config BSP_USING_SDIO1
+				bool "Enable SDIO1"
+				default n
+			config BSP_SDIO_EN_PORT
+				int "Set SDIO EN PORT"
+				default 3
+			config BSP_SDIO_EN_PIN
+				int "Set SDIO EN PIN"
+				default 5
+			config BSP_SDIO_EN_ACTIVE_LEVEL
+				int "Set SDIO EN ACTIVE LEVEL"
+				default 1
+			config BSP_SDIO_WAIT_AFTER_EN
+				int "Set SDIO WAIT AFTER EN"
+				default 5000
+		endif
+	menuconfig BSP_USING_ESP32
+		bool "Enable ESP32"
+		default n
+
+		if BSP_USING_ESP32
+			menuconfig BSP_USING_ESP32_EN
+				bool "Enable ESP32 EN"
+				default n
+
+				if BSP_USING_ESP32_EN
+					config BSP_USING_ESP32_EN_PORT
+						int "Set ESP32 EN PORT"
+						default 3
+					config BSP_USING_ESP32_EN_PIN
+						int "Set ESP32 EN PIN"
+						default 5
+				endif
+		endif
+	menuconfig BSP_USING_EFR32
+		bool "Enable EFR32"
+		default n
+
+		if BSP_USING_EFR32
+			menuconfig BSP_USING_EFR32_RST
+				bool "Enable EFR32 RST"
+				default n
+
+				if BSP_USING_EFR32_RST
+					config BSP_USING_EFR32_RST_PORT
+						int "Set EFR32 RST PORT"
+						default 3
+					config BSP_USING_EFR32_RST_PIN
+						int "Set EFR32 RST PIN"
+						default 10
+				endif
+		endif
+		
+	menuconfig BSP_USING_ANTENNA_RF_SWITCH
+		bool "Enable Antenna RF Switch"
+		default n
+
+		if BSP_USING_ANTENNA_RF_SWITCH
+			menuconfig BSP_USING_ANTENNA_RF_SWITCH_ESP32
+				bool "Enable Antenna RF Switch ESP32"
+				default n
+
+				if BSP_USING_ANTENNA_RF_SWITCH_ESP32
+					config BSP_USING_ANTENNA_RF_SWITCH_ESP32_PORT
+						int "Set Antenna RF Switch ESP32 PORT"
+						default 3
+					config BSP_USING_ANTENNA_RF_SWITCH_ESP32_PIN
+						int "Set Antenna RF Switch ESP32 PIN"
+						default 9
+				endif
+
+			menuconfig BSP_USING_ANTENNA_RF_SWITCH_EFR32
+				bool "Enable Antenna RF Switch EFR32"
+				default n
+
+				if BSP_USING_ANTENNA_RF_SWITCH_EFR32
+					config BSP_USING_ANTENNA_RF_SWITCH_EFR32_PORT
+						int "Set Antenna RF Switch EFR32 PORT"
+						default 3
+					config BSP_USING_ANTENNA_RF_SWITCH_EFR32_PIN
+						int "Set Antenna RF Switch EFR32 PIN"
+						default 10
+				endif
 		endif
 	
 endmenu

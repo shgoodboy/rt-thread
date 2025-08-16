@@ -216,6 +216,7 @@ static const struct dfs_file_ops _serial_fops =
 #endif /* RT_USING_POSIX_STDIO */
 
 extern void *itcam_malloc(uint32_t size);
+extern void Set_485_UartDirection_Receive(struct rt_serial_device *serial);
 
 /*
  * Serial poll routines
@@ -545,12 +546,15 @@ rt_inline int _serial_dma_rx(struct rt_serial_device *serial, rt_uint8_t *data, 
 rt_inline int _serial_dma_tx(struct rt_serial_device *serial, const rt_uint8_t *data, int length)
 {
     rt_base_t level;
-    rt_err_t result;
+    rt_err_t result = RT_EOK;
     struct rt_serial_tx_dma *tx_dma;
 
     tx_dma = (struct rt_serial_tx_dma*)(serial->serial_tx);
 
-    result = rt_data_queue_push(&(tx_dma->data_queue), data, length, RT_WAITING_FOREVER);
+    if (serial->config.is_485)
+    {
+        result = rt_data_queue_push(&(tx_dma->data_queue), data, length, RT_WAITING_FOREVER);
+    }
     if (result == RT_EOK)
     {
         level = rt_hw_interrupt_disable();
@@ -1367,17 +1371,24 @@ void rt_hw_serial_isr(struct rt_serial_device *serial, int event)
             struct rt_serial_tx_dma *tx_dma;
 
             tx_dma = (struct rt_serial_tx_dma*) serial->serial_tx;
-
-            rt_data_queue_pop(&(tx_dma->data_queue), &last_data_ptr, &data_size, 0);
-            if (rt_data_queue_peek(&(tx_dma->data_queue), &data_ptr, &data_size) == RT_EOK)
+            if (serial->config.is_485)
             {
-                /* transmit next data node */
-                tx_dma->activated = RT_TRUE;
-                serial->ops->dma_transmit(serial, (rt_uint8_t *)data_ptr, data_size, RT_SERIAL_DMA_TX);
+                Set_485_UartDirection_Receive(serial);
+                tx_dma->activated = RT_FALSE;
             }
             else
             {
-                tx_dma->activated = RT_FALSE;
+                rt_data_queue_pop(&(tx_dma->data_queue), &last_data_ptr, &data_size, 0);
+                if (rt_data_queue_peek(&(tx_dma->data_queue), &data_ptr, &data_size) == RT_EOK)
+                {
+                    /* transmit next data node */
+                    tx_dma->activated = RT_TRUE;
+                    serial->ops->dma_transmit(serial, (rt_uint8_t *)data_ptr, data_size, RT_SERIAL_DMA_TX);
+                }
+                else
+                {
+                    tx_dma->activated = RT_FALSE;
+                }
             }
 
             /* invoke callback */
