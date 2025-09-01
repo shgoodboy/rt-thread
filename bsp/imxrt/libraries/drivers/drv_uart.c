@@ -897,11 +897,14 @@ void Set_485_UartDirection_Receive(struct rt_serial_device *serial)
 {
     struct imxrt_uart *uart;
     RT_ASSERT(serial != RT_NULL);
-    uart = rt_container_of(serial, struct imxrt_uart, serial);
-    if (LPUART8 == uart->uart_base)
+    
+    if (serial->config.is_485)
     {
-        while (!(LPUART_GetStatusFlags(uart->uart_base) & kLPUART_TransmissionCompleteFlag));
-            SET_485_TO_RECIVE();
+        uart = rt_container_of(serial, struct imxrt_uart, serial);
+        while (!(LPUART_GetStatusFlags(uart->uart_base) & kLPUART_TransmissionCompleteFlag)) 
+        {
+        }
+        SET_485_TO_RECIVE();
     }
     
 }

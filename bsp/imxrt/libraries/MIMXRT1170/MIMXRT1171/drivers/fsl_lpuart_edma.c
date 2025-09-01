@@ -97,14 +97,13 @@ static void LPUART_SendEDMACallback(edma_handle_t *handle, void *param, bool tra
      */
     if (transferDone)
     {
-        /* Disable LPUART TX EDMA. */
-        LPUART_EnableTxDMA(lpuartPrivateHandle->base, false);
+        LPUART_TransferAbortSendEDMA(lpuartPrivateHandle->base, lpuartPrivateHandle->handle);
 
-        /* Stop transfer. */
-        EDMA_AbortTransfer(handle);
-
-        /* Enable tx complete interrupt */
-        LPUART_EnableInterrupts(lpuartPrivateHandle->base, (uint32_t)kLPUART_TransmissionCompleteInterruptEnable);
+        if (NULL != lpuartPrivateHandle->handle->callback)
+        {
+            lpuartPrivateHandle->handle->callback(lpuartPrivateHandle->base, lpuartPrivateHandle->handle,
+                                                  kStatus_LPUART_TxIdle, lpuartPrivateHandle->handle->userData);
+        }
     }
 }
 
@@ -186,6 +185,7 @@ void LPUART_TransferCreateHandleEDMA(LPUART_Type *base,
     }
 #endif
 
+#if 0
     /* Save the handle in global variables to support the double weak mechanism. */
     s_lpuartHandle[instance] = handle;
     /* Set LPUART_TransferEdmaHandleIRQ as DMA IRQ handler */
@@ -197,6 +197,7 @@ void LPUART_TransferCreateHandleEDMA(LPUART_Type *base,
     (void)EnableIRQ(s_lpuartTxIRQ[instance]);
 #else
     (void)EnableIRQ(s_lpuartIRQ[instance]);
+#endif
 #endif
 
     /* Configure TX. */

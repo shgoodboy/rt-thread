@@ -551,7 +551,7 @@ rt_inline int _serial_dma_tx(struct rt_serial_device *serial, const rt_uint8_t *
 
     tx_dma = (struct rt_serial_tx_dma*)(serial->serial_tx);
 
-    if (serial->config.is_485)
+    if (!serial->config.is_485)
     {
         result = rt_data_queue_push(&(tx_dma->data_queue), data, length, RT_WAITING_FOREVER);
     }
